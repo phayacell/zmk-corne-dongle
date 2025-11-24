@@ -1,6 +1,3 @@
-#define ZMK_POINTING_DEFAULT_MOVE_VAL 1200  // 600
-#define ZMK_POINTING_DEFAULT_SCRL_VAL 25   // 10
-
 #include <input/processors.dtsi>
 #include <zephyr/dt-bindings/input/input-event-codes.h>
 #include <behaviors.dtsi>
@@ -24,7 +21,7 @@
 
 &msc {
     acceleration-exponent = <1>;      // 0
-    time-to-max-speed-ms = <100>;       // 300
+    time-to-max-speed-ms = <100>;     // 300
     delay-ms = <0>;                   // 0
 };
 
@@ -36,51 +33,36 @@
 
 / {
     behaviors {
-        td0: td0 {
-            compatible = "zmk,behavior-tap-dance";
-            display-name = "Shift/Caps Lock Tap Dance";
-            #binding-cells = <0>;
-            bindings = <&kp LEFT_SHIFT>, <&kp CAPS>;
+        hm: homerow_mods {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            bindings = <&kp>, <&kp>;
+
+            flavor = "balanced";
+            tapping-term-ms = <180>;
+            quick-tap-ms = <180>;
+            require-prior-idle-ms = <125>;
         };
-    };
 
-    hm: homerow_mods {
-        compatible = "zmk,behavior-hold-tap";
-        display-name = "Homerow Mods";
-        #binding-cells = <2>;
-        tapping-term-ms = <180>;
-        quick-tap-ms = <180>;
-        flavor = "balanced";
-        bindings = <&kp>, <&kp>;
-    };
+        bspc_del: backspace_delete {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp BACKSPACE>, <&kp DELETE>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
 
-    bspc_del: backspace_delete {
-        compatible = "zmk,behavior-mod-morph";
-        display-name = "Backspace/Delete";
-        #binding-cells = <0>;
-        bindings = <&kp BACKSPACE>, <&kp DELETE>;
-        mods = <(MOD_LSFT|MOD_RSFT)>;
-    };
+        rgb_encoder: rgb_encoder {
+            compatible = "zmk,behavior-sensor-rotate";
+            #sensor-binding-cells = <0>;
+            bindings = <&rgb_ug RGB_BRI>, <&rgb_ug RGB_BRD>;
+        };
 
-    tdquit: tap_dance_quit {
-        compatible = "zmk,behavior-tap-dance";
-        display-name = "Tap Dance/App Quit";
-        #binding-cells = <0>;
-        bindings = <&kp TILDE>, <&kp LA(F4)>;
-        tapping-term-ms = <180>;
-    };
-
-    rgb_encoder: rgb_encoder {
-        compatible = "zmk,behavior-sensor-rotate";
-        #sensor-binding-cells = <0>;
-        bindings = <&rgb_ug RGB_BRI>, <&rgb_ug RGB_BRD>;
-    };
-
-    scroll_encoder: scroll_encoder {
-        compatible = "zmk,behavior-sensor-rotate";
-        #sensor-binding-cells = <0>;
-        bindings = <&msc SCRL_DOWN>, <&msc SCRL_UP>;
-        tap-ms = <100>;
+        scroll_encoder: scroll_encoder {
+            compatible = "zmk,behavior-sensor-rotate";
+            #sensor-binding-cells = <0>;
+            bindings = <&msc SCRL_DOWN>, <&msc SCRL_UP>;
+            tap-ms = <100>;
+        };
     };
 
     keymap {
@@ -94,7 +76,6 @@
 &kp RGUI   &kp Z  &kp X  &kp C         &hm LALT  V      &kp B             &kp ENTER             &kp DOWN              &kp N             &hm LALT  M      &kp COMMA  &kp DOT  &kp FSLH   &kp BSLH
                          &hm RALT ESC  &lt Q_LOW LANG2  &hm LSHIFT SPACE                                              &hm LSHIFT ENTER  &lt Q_LOW LANG1  &bspc_del
             >;
-
              sensor-bindings = <&inc_dec_kp RIGHT LEFT>; 
         };
 
@@ -106,7 +87,6 @@
 &trans     &kp EQUAL  &kp N1  &kp N2  &hm LALT  N3     &kp DOT    &kp C_MUTE                  &mmv MOVE_DOWN                   &kp LBKT  &hm LALT  RBKT   &kp LT    &kp GT     &kp QMARK  &kp PIPE
                               &trans  &lt RAISE LANG2  &trans                                                                  &trans    &lt RAISE LANG1  &trans
             >;
-
             sensor-bindings = <&scroll_encoder>;
         };
 
@@ -118,7 +98,6 @@
 &kp RGUI   &kp Z  &kp X  &kp C         &hm LALT  V        &kp SEMI          &kp ENTER            &kp DOWN              &kp G             &hm LALT  D        &kp M      &kp J  &kp B  &kp BSLH
                          &hm RALT ESC  &lt O24_LOW LANG2  &hm LSHIFT SPACE                                             &hm LSHIFT ENTER  &lt O24_LOW LANG1  &bspc_del
             >;
-
             sensor-bindings = <&inc_dec_kp RIGHT LEFT>;
         };
 
@@ -130,7 +109,6 @@
 &trans     &kp EQUAL  &kp N1  &kp N2  &hm LALT  N3     &kp COLON  &kp C_MUTE                  &mmv MOVE_DOWN                   &kp LBKT  &hm LALT  RBKT   &kp LT    &kp GT     &trans     &kp PIPE
                               &trans  &lt RAISE LANG2  &trans                                                                  &trans    &lt RAISE LANG1  &trans
             >;
-
             sensor-bindings = <&scroll_encoder>;
         };
 
@@ -142,7 +120,6 @@
 &kp C_SLEEP       &trans  &kp EXCL  &kp AT     &kp HASH   &trans   &trans          &trans          &kp LBRC  &kp RBRC  &trans      &trans   &trans   &tog O24
                                     &trans     &trans     &trans                                   &trans    &trans    &mo ADJUST
             >;
-
             sensor-bindings = <&scroll_encoder>;
         };
 
@@ -154,7 +131,6 @@
 &trans           &trans  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &trans      &trans          &trans          &trans  &trans  &trans  &trans  &trans  &trans
                                        &trans        &trans        &trans                                      &trans  &trans  &trans
             >;
-
             sensor-bindings = <&scroll_encoder>;
         };
     };

@@ -167,7 +167,7 @@ layers:
   - {t: '5', s: '%'}
   - {t: '6', h: '$$mdi:apple-keyboard-control$$', s: ^}
   - _
-  - {t: '$$mdi:menu-down$$', s: '$$mdi:mouse$$'}
+  - {t: '$$mdi:menu-left$$', s: '$$mdi:mouse$$'}
   - LCLK
   - {t: '$$mdi:menu-right$$', s: '$$mdi:mouse$$'}
   - END
